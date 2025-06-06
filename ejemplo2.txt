@@ -1,0 +1,8 @@
+int : x, y, z
+
+read x;
+read y;
+ifelse (x < y)
+   [z := x; print x]
+   [z := y; print (y + 1)];
+print z
