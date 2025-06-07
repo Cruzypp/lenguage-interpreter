@@ -88,22 +88,6 @@ def p_expression(p):
                   | expr EQ expr'''
     pass
 
-def p_empty(p):
-    'empty : '
-    p[0] = None
-
-def p_error(p):
-    if p:
-        print(f"Syntax error at '{p.value}'")
-        print(f"Line: {p.lexer.lineno}")
-    else:
-        print("Syntax error at EOF")
-    quit()
-
-# Construye el parser
-parser = yacc.yacc()
-
-# Clase para iterar sobre los tokens
 class TokenIterator:
     def __init__(self, tokens):
         self.tokens = tokens
@@ -130,6 +114,7 @@ def p_error(p):
         print("Syntax error at EOF")
     quit()
 
+# Construye el parser
 parser = yacc.yacc()
 
 class TokenFromFile:
@@ -179,3 +164,4 @@ if __name__ == "__main__":
 
     token_stream = TokenFromFile(sys.argv[1])
     result = parser.parse(lexer=token_stream)
+
