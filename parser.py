@@ -1,3 +1,4 @@
+
 import ply.yacc as yacc
 from lexer import tokens, lexer
 
@@ -12,12 +13,21 @@ precedence = (
 p_error_detected = False
 
 def p_program(p):
-    '''program : declarations statements
-               | declarations
-               | statements
-               | empty'''
+    '''program : opt_decls opt_stmts
+               | opt_stmts'''
+    interprete(p[len(p) - 1])
     if not p_error_detected:
         print("sí")
+
+def p_opt_decls(p):
+    '''opt_decls : declarations
+                 | empty'''
+    pass
+
+def p_opt_stmts(p):
+    '''opt_stmts : statements
+                 | empty'''
+    pass
 
 # Declaraciones
 def p_declarations(p):
@@ -142,7 +152,6 @@ def p_error(p):
     p_error_detected = True
     if p:
         print(f"Error de sintaxis en:'{p.value}' Tipo: {p.type} (línea {p.lineno})")
-        # Mostrar contexto
         print(f"Posición: {p.lexpos}")
     else:
         print("Error de sintaxis")
@@ -151,11 +160,12 @@ def p_error(p):
 parser = yacc.yacc(debug=False)
 
 def parse(data):
+    global p_error_detected
+    p_error_detected = False
     lexer.input(data)
     result = parser.parse(data, lexer=lexer)
     return not p_error_detected
 
-# Función para leer archivos y analizarlos
 def parse_file(filename):
     try:
         with open(filename, 'r') as file:
